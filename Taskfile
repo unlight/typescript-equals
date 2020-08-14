@@ -1,0 +1,68 @@
+#!/bin/bash
+PATH="$PWD/node_modules/.bin":$PATH
+set -e
+
+build() {
+    set -x
+    rm -rf dist
+    cp -rf src dist
+    cat tsconfig.json | jq 'del(.include, .compilerOptions.outDir)' > dist/tsconfig.json
+    cp -fv README.md LICENSE package.json dist
+    cd dist
+    /usr/bin/find . -name '*.spec.ts' | xargs rm -rf
+    tsc -p .
+    rm -rf tsconfig.json
+    cd ..
+    set +x
+}
+
+bundle() {
+    set -x
+    rm -rf dist
+    cp -rf src dist
+    cat tsconfig.json | jq '.compilerOptions.module = "esnext" | del(.include, .compilerOptions.outDir)' > dist/tsconfig.json
+    cp -v README.md LICENSE package.json dist
+    cd dist
+    /usr/bin/find . -name '*.spec.ts' | xargs rm -rf
+    npx microbundle -i index.ts --no-sourcemap --no-compress -f es,cjs -o .
+    rm -rf tsconfig.json
+    rm index.ts
+    mv index.d.ts typescript-equals.d.ts
+    cd ..
+    set +x
+}
+
+bundle_cli() {
+    set -x
+    rm -rf dist
+    npx tsup src/index.ts --inlineDynamicImports --format cjs,esm --target es2017
+    cp -fv README.md LICENSE package.json dist
+}
+
+git_last_release_tag() {
+    result=""
+    rev=$(git rev-list --max-count=1 --tags="v[0-9]*\\.[0-9]*\\.[0-9]*")
+    if [ -n "$rev" ]; then
+        result=$(git describe --tags $rev)
+    fi
+    if [ -n "$result" ]; then
+        result=$(git rev-list --max-parents=0 HEAD)
+    fi
+    echo $result
+}
+
+commit_msg() {
+    if git-branch-is -q -r "^(master)"; then
+        commitlint -E HUSKY_GIT_PARAMS
+    else
+        true
+    fi
+}
+
+commit_lint() {
+    set -x
+    from=$(git_last_release_tag)
+    commitlint --from $from
+}
+
+"$@"

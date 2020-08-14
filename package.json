@@ -1,0 +1,97 @@
+{
+  "name": "typescript-equals",
+  "version": "0.0.0-dev",
+  "license": "MIT",
+  "description": "Rough implementation of checking of AST equality",
+  "main": "typescript-equals.js",
+  "module": "typescript-equals.mjs",
+  "types": "typescript-equals.d.ts",
+  "keywords": [
+    "typescript",
+    "ast-comparison",
+    "ast-equality",
+    "ast",
+    "comparison"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unlight/typescript-equals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/unlight/typescript-equals/issues"
+  },
+  "homepage": "https://github.com/unlight/typescript-equals#readme",
+  "scripts": {
+    "test": "npm run eslint && npm run tscheck && npm run test:cov",
+    "mocha": "node node_modules/mocha/bin/_mocha",
+    "test:r": "mocha -r ts-node/register/transpile-only src/**/*.spec.ts",
+    "test:cov": "c8 --reporter text --exclude \"**/*.spec.ts\" --exclude \"**/testing/**\"  npm run test:r -- --no-timeouts",
+    "test:d": "node --inspect -r ts-node/register/transpile-only node_modules/mocha/bin/_mocha --no-timeouts --watch-files src/**/*.ts --watch src/**/*.spec.ts",
+    "test:brk": "node --inspect-brk -r ts-node/register/transpile-only node_modules/mocha/bin/_mocha --no-timeouts src/**/*.spec.ts",
+    "test:w": "mocha -r ts-node/register/transpile-only --watch-files src/**/*.ts --watch src/**/*.spec.ts",
+    "tscheck": "echo tscheck... && tsc --noEmit",
+    "tscheck:w": "npm run tscheck -- --watch",
+    "tsclint": "tsc --noEmit --strict --forceConsistentCasingInFileNames --noImplicitReturns --noImplicitThis --noUnusedLocals --noUnusedParameters",
+    "tsclint:w": "npm run tsclint -- --watch",
+    "eslint:w": "watchexec -w src \"npm run eslint\"",
+    "eslint": "node node_modules/eslint/bin/eslint \"src/**/*.{ts,tsx}\"",
+    "eslint:fix": "npm run eslint -- --fix",
+    "lint:fix": "npm run eslint:fix",
+    "commit": "node node_modules/cz-customizable/standalone.js",
+    "commit_lint": "sh Taskfile commit_lint",
+    "build": "sh Taskfile bundle",
+    "prettier:format": "npx prettier src --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "precise-commits",
+      "pre-push": "npm run test",
+      "commit-msg": "sh Taskfile commit_msg"
+    }
+  },
+  "dependencies": {
+    "lodash.trim": "^4.5.1"
+  },
+  "peerDependencies": {
+    "typescript": ">=3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@types/lodash.trim": "^4.5.6",
+    "@types/mocha": "^8.0.2",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "c8": "^7.3.0",
+    "cz-customizable": "^6.3.0",
+    "earljs": "^0.0.13",
+    "eslint": "^7.7.0",
+    "eslint-import-resolver-node": "^0.3.4",
+    "eslint-plugin-etc": "0.0.1-beta.40",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-only-warn": "^1.0.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-regexp": "^0.1.1",
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "eslint-plugin-sort-class-members": "^1.8.0",
+    "eslint-plugin-total-functions": "^1.42.1",
+    "eslint-plugin-unicorn": "^21.0.0",
+    "eslint-plugin-wix-editor": "^3.2.0",
+    "git-branch-is": "^4.0.0",
+    "husky": "^4.2.5",
+    "mocha": "^8.1.1",
+    "npm-run-all": "^4.1.5",
+    "precise-commits": "^1.0.2",
+    "prettier": "^2.0.5",
+    "semantic-release": "^17.1.1",
+    "ts-morph": "^7.3.0",
+    "ts-node": "^8.10.2",
+    "typescript": "~3.9.7",
+    "watchexec-bin": "^1.0.0"
+  }
+}
